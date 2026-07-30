@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.menu import MenuLink
+from flask_admin.theme import Bootstrap4Theme
+
+from app.model.Role import Role
+from app.model.User import User
+from app.model.Category import Category
+from app.model.Product import Product
+
+from admin.Views import UserView, HomeView, ProductView, RoleView, CategoryView
+
+def start_views(app, db):
+
+    admin = Admin(app, name='Meu Estoque', theme=Bootstrap4Theme(swatch='superhero'), 
+                  index_view=HomeView())
+
+    admin.add_view(UserView(User, db.session, "Registros", category="Usuários"))
+
+    admin.add_view(RoleView(Role, db.session, "Funções", category="Usuários"))
+
+    admin.add_view(CategoryView(Category, db.session, 'Categorias',
+        category="Produtos"))
+    admin.add_view(ProductView(Product, db.session, "Produtos",
+        category="Produtos"))
+
+    admin.add_link(MenuLink(name='Logout', url='/logout'))
