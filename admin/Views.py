@@ -15,6 +15,7 @@ from app.config import app_config, app_active
 from app.model.User import User
 from app.model.Category import Category
 from app.model.Product import Product
+from app.model.Role import Role
 from flask_login import current_user
 
 config = app_config[app_active]
@@ -41,9 +42,9 @@ class HomeView(AdminIndexView):
         products = product_model.get_total_product()
         last_products = product_model.get_last_products()
 
-        print(users)
-        print(last_products)
-        print("Testando carregando da view base")
+        #print(users)
+        #print(last_products)
+        #print("Testando carregando da view base")
         
         # Passando o argumento report, como um dicionário contendo os valores de cada tabela
         return self.render('home_admin.html', data={
@@ -56,8 +57,8 @@ class HomeView(AdminIndexView):
 
     # Função que verifica o nível de acesso do usuário
     def is_accessible(self):
-        print("Verificando se user tem acesso (Admin)")
-        print(current_user.is_authenticated)
+        #print("Verificando se user tem acesso (Admin)")
+        #print(current_user.is_authenticated)
         return current_user.is_authenticated
 
     # Função que trata acessos não autorizados
@@ -81,9 +82,6 @@ class UserView(ModelView):
         }
     }
     
-    """
-    Adicione as linhas a seguir na UserView
-    """
     can_set_page_size = True
     can_view_details = True
     column_searchable_list = ['username', 'email']
@@ -121,9 +119,6 @@ class UserView(ModelView):
         'active': 'Estado ativo ou inativo no sistema',
         'password': 'Senha do usuário no sistema',
     }
-    """
-    Parei aqui....................
-    """
     
     def on_model_change(self, form, User, is_created):
         print("Mudou...")

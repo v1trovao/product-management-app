@@ -51,6 +51,26 @@ class User(db.Model, UserMixin):
         finally: 
             db.session.close()
             return res
+
+    def get_user_by_name(self):
+        try:
+            res = db.session.query(User).filter(User.username==self.username).first()
+        except Exception as e:
+            res = []
+            print(e)
+        finally:
+            db.session.close()
+        return res
+
+    def save(self):
+        try:
+            db.session.add(self)
+            print("Salvando...")
+            db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()
+            return False
     
     def update(self, obj):
         """

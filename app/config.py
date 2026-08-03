@@ -63,5 +63,5 @@ default_roles = ['Admin', 'Gerente', 'Lojista', 'Cliente']
 default_admin = {
     'username': 'admin',
     'email': 'admin@gmail.com',
-    'password': 123
+    'password': '123'
 }

@@ -113,5 +113,6 @@ class UserController():
     def get_admin_login(self, user_id):
         self.user_model.id = user_id
         res = self.user_model.get_user_by_id()
-        print(res)
+        #print(res)
         return res
+

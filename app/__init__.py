@@ -3,6 +3,7 @@ import os
 
 # flask e app (rotas, db, etc...)
 from flask import Flask, request, redirect, render_template, Response, json, abort
+from sqlalchemy import inspect
 from app.config import app_config, app_active
 from app.extensions import db, migrate, login_manager
 
@@ -15,6 +16,7 @@ from admin.Admin import start_views
 from flask_bootstrap import Bootstrap
 
 # controllers
+from app.controller.Setup import SetupController
 from app.controller.User import UserController
 from app.controller.Product import ProductController
 
@@ -77,7 +79,19 @@ def create_app(config_name='development'):
 
     @app.route('/')
     def index():
-        return 'Meu run'
+        inspector = inspect(db.engine)
+        setup = SetupController()
+
+        print(inspector.get_table_names())
+        if not inspector.get_table_names():
+            return "Erro: O banco ainda não foi migrado. Rode o flask db upgrade", 500
+
+        if not setup.check_admin():
+
+            setup.create_default_roles()
+            setup.create_default_admin()
+
+        return redirect('/login')
     
     """LOGIN"""
     # Rota que acessa a página de login
@@ -321,8 +335,6 @@ def create_app(config_name='development'):
     def load_user(user_id):
         print("Carregando dados do usuário...")
         user = UserController()
-        res = user.get_admin_login(user_id)
-        print("Usuário: ", res)
-        return res
+        return user.get_admin_login(user_id)
     
     return app
