@@ -61,7 +61,7 @@ USER=your-username
 PASSWORD=your-password
 HOST=your-host
 PORT=3306
-DATABASE=product-management-app
+DATABASE=product_management_app
 DATABASE_URL=mysql+pymysql://${USER}:${PASSWORD}@${HOST}:${PORT}/${DATABASE}
 ```
 
@@ -90,5 +90,5 @@ python run.py
 requirements.txt      # Dependências
 run.py                # Script de execução do app
 .env
-.README.md
+README.md
 ```

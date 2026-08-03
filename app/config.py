@@ -2,12 +2,6 @@ import os
 from dotenv import load_dotenv
 import random, string 
 
-USER="root"
-PASSWORD="12345"
-HOST="127.0.0.1"
-PORT=3306
-DATABASE="livro_flask"
-
 load_dotenv()
 
 class Config(object):
@@ -63,3 +57,11 @@ app_config = {
 
 # Recebe a variável de ambiente para definir a config.
 app_active = os.getenv('FLASK_ENV', 'development') 
+
+# Dados pré-definidos no contexto do app
+default_roles = ['Admin', 'Gerente', 'Lojista', 'Cliente']
+default_admin = {
+    'username': 'admin',
+    'email': 'admin@gmail.com',
+    'password': 123
+}
