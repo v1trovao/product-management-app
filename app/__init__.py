@@ -113,9 +113,9 @@ def create_app(config_name='development'):
         password = request.form['password']
 
         # Obtem o usuário associado ao email e senha fornecidos
+        #print(f"Dados fornecidos - Email: {email}, Senha: {password}")
         result = user.login(email, password)
 
-        print("Login de: ", result)
         if result:
             # Verificação do tipo de usuário que fez login
 
@@ -140,22 +140,57 @@ def create_app(config_name='development'):
     
     @app.route('/recovery-password/')
     def recovery_password():
-        return 'Aqui entrará a tela de recuperar senha'
+        """Acessa a página de recuperação de senha"""
+        return render_template('recovery.html', data={'status': 200, 'msg': None, 'type': None})
     
     @app.route('/recovery-password/', methods=['POST'])
     def send_recovery_password():
+        """Envia o email para recuperação de senha"""
         user = UserController()
         result = user.recovery(request.form['email'])
-        if result:
+
+        if result['status_code'] == 200 or result['status_code'] == 202:
             return render_template('recovery.html', data={'status': 200, 'msg':
-            'E-mail de recuperação enviado com sucesso'})
+            'E-mail de recuperação enviado com sucesso', 'type': 3})
         else:
             return render_template('recovery.html', data={'status': 401, 'msg':
-            'Erro ao enviar e-mail de recuperação'})
-        
-    @app.route('/rotamundo', methods=['GET'])
-    def rota():
-        return 'Aqui entrará a tela de recuperar senha'
+            'Erro ao enviar e-mail de recuperação', 'type': 1})
+
+    @app.route('/new-password/<recovery_code>')
+    def new_password(recovery_code):
+        """Faz a validação do código de recuperação""" 
+        user = UserController()
+        result = user.verify_auth_token(recovery_code)
+
+        if result['status'] == 200:
+            res = user.get_user_by_recovery(str(recovery_code))
+
+            if res is not None:
+                return render_template('new_password.html', data={'status':
+                result['status'], 'msg': None, 'type': None, 'user_id': res.id})
+            else:
+                return render_template('recovery.html', data={'status': 400, 
+                                                              'msg': 'Erro ao acessar dados do usuário. Tente novamente.', 'type': 1})
+        else:
+            return render_template('recovery.html', data={'status': 
+                                                          result['status'], 'msg': 'Token expirado ou inválido, faça a solicitação novamente', 'type': 1})
+
+    @app.route('/new-password/', methods=['POST'])
+    def send_new_password():
+        """Acessa a página de alteração de senha"""
+        user = UserController()
+        user_id = request.form['user_id']
+        password = request.form['password']
+
+        result = user.new_password(user_id, password)
+
+        if result:
+            return render_template('login.html', data={'status': 200, 'msg':
+                                                       'Senha alterada com sucesso!', 'type': 3, 'user_id': user_id})
+        else:
+            return render_template('new_password.html', data={'status': 401, 
+                                                              'msg': 'Erro ao alterar senha.', 'type': 1, 'user_id': user_id})
+
     
     """USUÁRIO"""
     @app.route('/profile/<int:id>')

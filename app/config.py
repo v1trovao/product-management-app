@@ -17,6 +17,7 @@ class Config(object):
     # Instâncias
     APP = None
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SENDGRID_API_KEY=os.getenv('SENDGRID_API_KEY')
 
 # Subclasses
 # Testing: habilita testes, warnings e erros visíveis

@@ -62,10 +62,21 @@ class User(db.Model, UserMixin):
             db.session.close()
         return res
 
+    def get_user_by_recovery(self):
+        """Retorna um usuário pelo código de recuperação"""
+        try:
+            res = db.session.query(User).filter(User.recovery_code==self.recovery_code).first()
+        except Exception as e:
+            res = None
+            print(e)
+        finally:
+            db.session.close()
+        return res
+    
     def save(self):
         try:
             db.session.add(self)
-            print("Salvando...")
+            #print("Salvando...")
             db.session.commit()
             return True
         except Exception as e:
@@ -74,9 +85,17 @@ class User(db.Model, UserMixin):
     
     def update(self, obj):
         """
-        Construiremos essa função capítulos depois
+        Atualiza os dados de um usuário no banco
         """
-        return ''
+        try:
+            res = db.session.query(User).filter(User.id == self.id).update(obj)
+            db.session.commit()
+            return True
+
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return False
     
     def hash_password(self, password):
         try:
