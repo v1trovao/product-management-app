@@ -6,9 +6,10 @@ Aplicação web para gerenciamento de produtos, que oferece um painel administra
 O projeto foi desenvolvido com Flask, Jinja2 e SQLAlchemy, como parte do estudo em desenvolvimento de aplicações web no backend.
 
 ## Funcionalidades
-- Interface completa com as operações CRUD para produtos e usuários do sistema, integrado a um banco de dados.
+- Interface completa com as operações CRUD para produtos e usuários do sistema, integrado a um banco de dados
 - Painel Administrativo com informações atualizadas sobre o sistema, e histórico de movimentações dos produtos
 - Autenticação de usuários cadastrados no sistema, com níveis de acesso para cada tipo de usuário
+- Recuperação de senha dos usuários via e-email
 
 ## Tecnologias Usadas
 - **Flask** - Framework para desenvolvimento da aplicação
@@ -17,6 +18,7 @@ O projeto foi desenvolvido com Flask, Jinja2 e SQLAlchemy, como parte do estudo 
 - **Jinja2**: Engine usado no Flask para servir as páginas na interface do usuário
 - **Bootstrap 5**: Framework CSS para construção de interfaces
 - **JWT**: Uso do módulo PyJWT que faz a autenticação dos usuário através de tokens de acesso
+- **SendGrid/Twilio**: API que fornece serviços de comunicação por e-mail
 
 ## Como executar 
 
@@ -59,10 +61,13 @@ SECRET=your-secret-key
 # Conexão com banco MySQL
 USER=your-username
 PASSWORD=your-password
-HOST=your-host
+HOST=localhost
 PORT=3306
 DATABASE=product_management_app
 DATABASE_URL=mysql+pymysql://${USER}:${PASSWORD}@${HOST}:${PORT}/${DATABASE}
+
+# Email
+SENDGRID_API_KEY=your-key
 ```
 
 7. Execute o comando para carregar o banco de dados
