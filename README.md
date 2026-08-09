@@ -16,7 +16,7 @@ O projeto foi desenvolvido com Flask, Jinja2 e SQLAlchemy, como parte do estudo 
 - **SQLAlchemy** - ORM para modelagem e interação com o banco de dados
 - **MySQL**: Banco de dados usado no desenvolvimento
 - **Jinja2**: Engine usado no Flask para servir as páginas na interface do usuário
-- **Bootstrap 5**: Framework CSS para construção de interfaces
+- **Bootstrap**: Framework CSS para construção de interfaces
 - **JWT**: Uso do módulo PyJWT que faz a autenticação dos usuário através de tokens de acesso
 - **SendGrid/Twilio**: API que fornece serviços de comunicação por e-mail
 
