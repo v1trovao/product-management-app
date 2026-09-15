@@ -67,6 +67,7 @@ DATABASE=product_management_app
 DATABASE_URL=mysql+pymysql://${USER}:${PASSWORD}@${HOST}:${PORT}/${DATABASE}
 
 # Email
+SENDGRID_EMAIL=your-contact@email.com
 SENDGRID_API_KEY=your-key
 ```
 
