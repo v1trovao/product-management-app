@@ -137,7 +137,8 @@ def create_app(config_name='development'):
         else:
             return render_template('login.html', data={'status': 401, 'msg':
         'Dados de usuário incorretos', 'type': 1})
-    
+
+    """RECUPERAÇÃO DE SENHA"""
     @app.route('/recovery-password/')
     def recovery_password():
         """Acessa a página de recuperação de senha"""

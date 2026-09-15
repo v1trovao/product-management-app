@@ -1,23 +1,33 @@
 import os
-from dotenv import load_dotenv
-import random, string 
+import secrets
+from dotenv import load_dotenv, set_key
 
 load_dotenv()
 
 class Config(object):
+    
+    # Diretórios 
+    TEMPLATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+    APP_DIR = os.path.dirname(os.path.abspath(__file__))
+    ROOT_DIR = os.path.dirname(APP_DIR)
+    ENV_FILE = f"{ROOT_DIR}/.env"
 
     # Habilita criptografia
     CSRF_ENABLED = os.getenv('CSRF_ENABLED')
     SECRET = os.getenv('SECRET')
-    
-    # Diretórios 
-    TEMPLATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    print(len(str(SECRET).encode('utf-8')))
+
+    # Inicia variável SECRET verificando formato de 256bits
+    if len(str(SECRET).encode('utf-8')) < 64:
+        new_secret = secrets.token_hex(32)
+        set_key(ENV_FILE, "SECRET", new_secret, quote_mode="never")
+        print("-> SECRET gerado e salvo no .env")
     
     # Instâncias
     APP = None
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SENDGRID_API_KEY=os.getenv('SENDGRID_API_KEY')
+    SENDGRID_EMAIL=os.getenv('SENDGRID_EMAIL')
 
 # Subclasses
 # Testing: habilita testes, warnings e erros visíveis

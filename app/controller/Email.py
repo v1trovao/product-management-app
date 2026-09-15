@@ -7,8 +7,8 @@ from app.config import app_active, app_config
 config = app_config[app_active]
 
 class EmailController():
-    def send_email(self, t_email, subject, content_text, f_email="contato@site.com.br"):
-
+    def send_email(self, t_email, subject, content_text, f_email=config.SENDGRID_EMAIL):
+        
         print(f"Para quem? {t_email}")
         print(f"Assunto: {subject}")
         print(f"Conteúdo: {content_text}")
