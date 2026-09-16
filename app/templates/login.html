@@ -8,11 +8,11 @@
  {% endblock %}
 
  {% block content %}
-    <h1>Olá mundo!!!!</h1>
+    <!-- Acesso Admin -->
     <form class="form-signin text-center" action="/login/" method="post">
         <img class="mb-4"
-        src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg"
-        alt="login" width="72" height="72">
+        src="{{url_for('.static', filename='product-flat.png')}}"
+        alt="login" width="82" height="82">
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>
         <h2> {{message }}</h2>
         <div class="checkbox mb-3 ml-5">
