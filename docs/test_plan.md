@@ -1,7 +1,4 @@
-### Descrever o contexto da aplicações e os requisitos e casos de uso
-
-
-Nome do Sistema: Product Management App
+### Sistema: Product Management App
 
 versão 0.1
 
