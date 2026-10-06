@@ -1,8 +1,7 @@
 from datetime import datetime
 
 from app.model.Product import Product
-
-
+from pymysql.err import IntegrityError
 
 class ProductController():
 
@@ -64,17 +63,35 @@ class ProductController():
     
     # Função que recebe dados de um objeto Produto e salva no banco
     def save_product(self, obj):
-        self.product_model.name = obj['name']
-        self.product_model.description = obj['description']
-        self.product_model.qtd = obj['qtd']
-        self.product_model.price = obj['price']
-        self.product_model.date_created = datetime.now()
-        self.product_model.last_update = datetime.now()
-        self.product_model.status = 1
-        self.product_model.category = obj['category']
-        self.product_model.user_created = obj['user_created']
 
-        return self.product_model.save()
+        try:
+            self.product_model.name = obj['name']
+            self.product_model.description = obj['description']
+            self.product_model.qtd = obj['qtd']
+            self.product_model.price = obj['price']
+            self.product_model.date_created = datetime.now()
+            self.product_model.last_update = datetime.now()
+            self.product_model.status = 1
+            self.product_model.category = obj['category']
+            self.product_model.user_created = obj['user_created']
+
+            res = self.product_model.save()
+            if not res:
+                return {"success": False, "message": "Product could not be saved (duplicated ou invalid data)..."}
+
+            return {"success": True, "message": "Product saved!"}
+
+        except IntegrityError as e:
+            message = str(e)
+
+            if "Duplicate entry" in message:
+                return {"success": False, "message": "Product name already exist..."}
+
+        except KeyError as e:
+            return {"success": False, "message": f"Field '{e.args[0]}' is missing..."}
+
+        except Exception as e:
+            return {"success": False, "message": "Internal error..."}
     
     # Função que atualiza os dados de um objeto Produto
     def update_product(self, obj):

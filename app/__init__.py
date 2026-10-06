@@ -225,9 +225,7 @@ def create_app(config_name='development'):
     @app.route('/product', methods=['POST'])
     def save_products():
         product = ProductController()
-        print(request.form)
         result = product.save_product(request.form)
-        print(result)
 
         if result:
             message = 'Inserido'
