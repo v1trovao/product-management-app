@@ -3,7 +3,7 @@ from app import create_app, config
 from app.config import app_config, app_active
 
 config = app_config[app_active]
-config.APP = create_app(app_active)
+config.APP = create_app(app_active, config)
 app = config.APP 
 
 '''

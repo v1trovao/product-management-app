@@ -80,6 +80,7 @@ class User(db.Model, UserMixin):
             db.session.commit()
             return True
         except Exception as e:
+            print(e)
             db.session.rollback()
             return False
     
@@ -99,6 +100,7 @@ class User(db.Model, UserMixin):
     
     def hash_password(self, password):
         try:
+            print("Coisando a senha...")
             return pbkdf2_sha256.hash(password)
         except Exception as e:
             print("Erro ao criptografar senha %s" % e)

@@ -57,6 +57,17 @@ class Role(db.Model):
         finally:
             db.session.close()
         return res
+    
+    def get_role_id_by_name(self, name):
+        try:
+            res = db.session.query(Role.id).filter_by(name=name).scalar()
+        except Exception as e:
+            res = []
+            print(e)
+        finally:
+            db.session.close()
+
+        return res
 
     def get_all_roles(self):
         try:

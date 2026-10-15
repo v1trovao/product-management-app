@@ -1,0 +1,23 @@
+[
+    {
+        "username": "João Vitor Cunha",
+        "email": "nicolas80@outlook.com",
+        "password": 123,
+        "role": 1
+    },
+    {
+        "username": "Heloisa Andrade",
+        "email": "emilly98@hotmail.com",
+        "role": 1
+    },
+    {
+        "username": "Benício Souza",
+        "email": "pereiraluiza@live.com",
+        "role": 1
+    },
+    {
+        "username": "Renato Aragão",
+        "email": "fernando92@gmail.com",
+        "role": 1
+    }
+]

@@ -3,9 +3,11 @@ import os
 
 # flask e app (rotas, db, etc...)
 from flask import Flask, request, redirect, render_template, Response, json, abort
+from flask import flash
 from sqlalchemy import inspect
 from app.config import app_config, app_active
 from app.extensions import db, migrate, login_manager
+from app.demo.seed import run_seed
 
 # login/autenticação
 from flask_login import login_user, logout_user
@@ -21,11 +23,12 @@ from app.controller.User import UserController
 from app.controller.Product import ProductController
 
 # Instância da configuração
-config = app_config[app_active]
+# config = app_config[app_active]
 
 
 # Função que inicializa a aplicação flask com as configs
-def create_app(config_name='development'):
+def create_app(config_name='development', config=app_config[app_active]):
+    print("Iniciando aqui...")
     app = Flask(__name__, template_folder='templates')
 
     login_manager.init_app(app)
@@ -39,12 +42,15 @@ def create_app(config_name='development'):
     print(f"Pasta existe fisicamente? {os.path.exists(caminho_absoluto)}")
     print(f"Conteúdo da pasta: {os.listdir(caminho_absoluto) if os.path.exists(caminho_absoluto) else 'PASTA NÃO ENCONTRADA'}")
     print("----------------------------\n")
-    print("Ambiente configurado: ", os.getenv('FLASK_ENV'))
+    print("Ambiente configurado: ", config_name)
 
     # Banco de Dados
     app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    print(config)
+    print(config.SQLALCHEMY_DATABASE_URI)
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
     Bootstrap(app)
     start_views(app, db)
     db.init_app(app)
@@ -90,6 +96,16 @@ def create_app(config_name='development'):
 
             setup.create_default_roles()
             setup.create_default_admin()
+
+        return redirect('/login')
+
+    @app.route('/demo')
+    def demo_setup():
+        try:
+            run_seed()
+            flash("Dados carregados com sucesso!")
+        except Exception as e:
+            flash(f"Erro ao carregar dados: {e}", "danger")
 
         return redirect('/login')
     

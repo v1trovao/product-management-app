@@ -1,9 +1,12 @@
-from app.model.User import User
-
-from datetime import datetime, timedelta, timezone
 import hashlib, base64, json, jwt
-from app.config import app_config, app_active
 
+from pymysql.err import IntegrityError
+from datetime import datetime, timedelta, timezone
+
+from passlib.hash import pbkdf2_sha256
+
+from app.model.User import User
+from app.config import app_config, app_active
 from app.controller.Email import EmailController
 
 config = app_config[app_active]
@@ -193,3 +196,57 @@ class UserController():
         #print(res)
         return res
 
+    def save_user(self, obj):
+        result = {}
+        try:
+            if (len(obj['username']) > 40):
+                print("Maior que 20")
+                result = []
+                status = 400
+                message = "Username exceeds 40 characters..."
+
+            else:
+                print("Cadastrando...")
+                self.user_model.username = obj['username']
+                self.user_model.email = obj['email']
+                print(obj['password'])
+                self.user_model.password = self.user_model.hash_password(obj['password'])
+                self.user_model.date_created = datetime.now()
+                self.user_model.last_update = datetime.now()
+                self.user_model.role = obj['role']
+
+                result = self.user_model.save()
+
+                if not result:
+                    result = []
+                    status = 400
+                    message = "User could not be saved (duplicated or invalid data)..."
+                
+                else:
+                    status = 200
+                    message = "Product saved!"
+
+        except IntegrityError as e:
+            exception = str(e)
+
+            if "Duplicate entry" in exception:
+                result = []
+                status = 400
+                message = "User already exist..."
+
+        except KeyError as e:
+            result = []
+            status = 400
+            message = f"Field '{e.args[0]}' is missing..."
+
+        except Exception as e:
+            result = []
+            status = 400
+            message = "Internal error..."
+
+        finally:
+            return {
+                "result": result,
+                "status": status,
+                "message": message
+            }
