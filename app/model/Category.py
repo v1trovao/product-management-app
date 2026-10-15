@@ -12,6 +12,27 @@ class Category(db.Model):
     def __repr__(self):
         return self.name
 
+    def save(self):
+            try:
+                db.session.add(self)
+                db.session.commit()
+                return True
+            except Exception as e:
+                print(e)
+                db.session.rollback()
+                return False
+
+    def get_category_by_name(self):
+            try:
+                res = db.session.query(Category).filter(Category.name == self.name).first()
+            except Exception as e:
+                res = []
+                print(e)
+            finally:
+                db.session.close()
+    
+            return res
+
     # Função que retorna todos os objetos Categoria do banco
     def get_total_category(self):
         try:
@@ -21,4 +42,14 @@ class Category(db.Model):
             print(e)
         finally:
             db.session.close()
+            return res
+
+    def get_all_categories(self):
+            try:
+                res = db.session.query(Category).all()
+            except Exception as e:
+                res = []
+                print(e)
+            finally:
+                db.session.close()
             return res

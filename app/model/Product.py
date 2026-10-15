@@ -72,6 +72,17 @@ class Product(db.Model):
         finally:
             db.session.close()
             return (res)
+
+    def get_product_by_name(self):
+        try:
+            res = db.session.query(Product).filter(Product.name == self.name).first()
+        except Exception as e:
+            res = []
+            print(e)
+        finally:
+            db.session.close()
+
+        return res
     
     # Função que adiciona um objeto Produto e salva no banco
     # Obs: O commit() e o rollback(), após executarem já finalizam a conexão, 
@@ -80,6 +91,7 @@ class Product(db.Model):
         try:
             db.session.add(self)
             db.session.commit()
+
             return True
         
         # Se houver erro, desfaz a operação

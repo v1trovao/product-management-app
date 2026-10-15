@@ -60,14 +60,43 @@ class ProductController():
                 'status': status
             }
 
-    
-    # Função que recebe dados de um objeto Produto e salva no banco
-    def save_product(self, obj):
+    def validate_data(self, obj):
+        if (len(obj['name']) > 20):
+            result = []
+            status = 400
+            message = "Product name exceeds 20 characters..."
 
+        if (type(obj['qtd']) != int):
+            result = []
+            status = 400
+            message = "Insert a valid 'qtd' value..."
+
+  
+    def save_product(self, obj):
+        """Função que recebe dados de um objeto Produto e salva no banco"""
+        result = {}
         try:
+            if (len(obj['name']) > 20):
+                print("Maior que 20")
+                result = []
+                status = 400
+                message = "Product name exceeds 20 characters..."
+                return
+
+            if (type(obj['qtd']) != int):
+                result = []
+                status = 400
+                message = "Insert a valid 'qtd' value..."
+                return
+
             self.product_model.name = obj['name']
             self.product_model.description = obj['description']
             self.product_model.qtd = obj['qtd']
+
+            if obj['image']:
+                self.product_model.image = obj['image']
+            else:
+                self.product_model.image = "Image"
             self.product_model.price = obj['price']
             self.product_model.date_created = datetime.now()
             self.product_model.last_update = datetime.now()
@@ -75,23 +104,41 @@ class ProductController():
             self.product_model.category = obj['category']
             self.product_model.user_created = obj['user_created']
 
-            res = self.product_model.save()
-            if not res:
-                return {"success": False, "message": "Product could not be saved (duplicated ou invalid data)..."}
+            result = self.product_model.save()
 
-            return {"success": True, "message": "Product saved!"}
+            if not result:
+                result = []
+                status = 400
+                message = "Product could not be saved (duplicated or invalid data)..."
+            
+            else:
+                status = 200
+                message = "Product saved!"
 
         except IntegrityError as e:
-            message = str(e)
+            exception = str(e)
 
-            if "Duplicate entry" in message:
-                return {"success": False, "message": "Product name already exist..."}
+            if "Duplicate entry" in exception:
+                result = []
+                status = 400
+                message = "Product name already exist..."
 
         except KeyError as e:
-            return {"success": False, "message": f"Field '{e.args[0]}' is missing..."}
+            result = []
+            status = 400
+            message = f"Field '{e.args[0]}' is missing..."
 
         except Exception as e:
-            return {"success": False, "message": "Internal error..."}
+            result = []
+            status = 400
+            message = "Internal error..."
+
+        finally:
+            return {
+                "result": result,
+                "status": status,
+                "message": message
+            }
     
     # Função que atualiza os dados de um objeto Produto
     def update_product(self, obj):
